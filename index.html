@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Витрина анимаций — сайт Ольги Шевелевой</title>
+<!--
+  В боевом сайте вместо системных шрифтов будут подключены файлами (без внешних CDN):
+  заголовки — Cormorant Garamond, текст — Jost Light.
+  Здесь используется системный стек, чтобы страница была полностью автономной.
+-->
+<style>
+  :root{
+    --bg:#fbfcfe;
+    --heading:#0e1e30;
+    --accent:#356094;
+    --navy:#18324f;
+    --light1:#dce7f1;
+    --light2:#eaf1f7;
+    --light3:#9dbfdc;
+    --text:#44607e;
+    --muted:#aec4da;
+    --sand:#cdb489;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{
+    font-family:Georgia,"Times New Roman",serif;
+    color:var(--heading);
+    font-weight:400;
+    margin:0 0 .4em;
+  }
+  p{ margin:0 0 1em; }
+  button{ font-family:inherit; }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.25em;
+    font-size:.66rem;
+    color:var(--accent);
+    font-weight:600;
+  }
+
+  .page-header{
+    padding:30px 18px 22px;
+    text-align:center;
+    background:var(--light2);
+    border-bottom:1px solid var(--light1);
+  }
+  .page-header h1{ font-size:1.25rem; margin-top:.5em; }
+  .page-header .lead{ font-size:.92rem; color:var(--text); max-width:520px; margin:0 auto 12px; }
+  .page-header .hint{
+    display:inline-block;
+    font-size:.85rem;
+    color:var(--navy);
+    background:#fff;
+    border:1px solid var(--light3);
+    border-radius:20px;
+    padding:9px 16px;
+    margin-top:4px;
+  }
+
+  .quicknav{
+    max-width:760px;
+    margin:16px auto 0;
+    padding:0 18px 4px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    justify-content:center;
+  }
+  .quicknav a{
+    display:inline-block;
+    font-size:.72rem;
+    color:var(--navy);
+    background:#fff;
+    border:1px solid var(--light1);
+    border-radius:14px;
+    padding:5px 9px;
+    text-decoration:none;
+  }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:0 18px; }
+
+  .group{ padding:38px 0 6px; border-top:1px solid var(--light1); }
+  .group:first-of-type{ border-top:none; }
+  .group-title{ font-size:1.12rem; }
+  .group-note{ font-size:.85rem; color:var(--text); margin-top:-4px; margin-bottom:16px; }
+
+  .variant{
+    background:#fff;
+    border:1px solid var(--light1);
+    border-radius:14px;
+    padding:18px 16px 20px;
+    margin-bottom:18px;
+    scroll-margin-top:16px;
+  }
+  .v-num{
+    font-family:Georgia,serif;
+    font-size:1.7rem;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .v-stage{
+    position:relative;
+    min-height:60px;
+    margin-bottom:12px;
+    overflow:hidden;
+    border-radius:10px;
+  }
+  .v-desc{ font-size:.88rem; color:var(--text); margin:0 0 12px; }
+  .replay{
+    font-size:.82rem;
+    color:var(--navy);
+    background:var(--light2);
+    border:1px solid var(--light3);
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+  }
+  .replay:active{ background:var(--light1); }
+
+  /* ---------- Группа 1: заголовок ---------- */
+  .hero-title-demo{
+    background:var(--light2);
+    padding:28px 16px;
+    text-align:center;
+  }
+  .hero-title-demo h3{ font-size:1.2rem; margin:0; }
+
+  .js .ch{ opacity:0; transform:translateY(6px); display:inline-block; }
+  .play .ch{ animation:chIn .45s ease forwards; animation-delay:calc(var(--i) * 45ms); }
+  @keyframes chIn{ to{ opacity:1; transform:translateY(0); } }
+  .word{ display:inline-block; }
+
+  .line-mask{ overflow:hidden; }
+  .js .line-inner{ display:block; transform:translateY(115%); }
+  .play .line-inner{ animation:lineUp .6s cubic-bezier(.22,.9,.32,1) forwards; animation-delay:calc(var(--i) * 150ms); }
+  @keyframes lineUp{ to{ transform:translateY(0); } }
+
+  .js .word-pop{ opacity:0; transform:scale(1.18); display:inline-block; }
+  .play .word-pop{ animation:wordPop .5s ease forwards; animation-delay:calc(var(--i) * 130ms); }
+  @keyframes wordPop{ to{ opacity:1; transform:scale(1); } }
+
+  /* ---------- Группа 2: фон первого экрана ---------- */
+  .bg-demo{ position:relative; height:190px; border-radius:10px; overflow:hidden; }
+  .bg-layer{
+    position:absolute; top:-12%; left:-12%; right:-12%; bottom:-12%;
+    background:linear-gradient(135deg,var(--light3),var(--accent));
+  }
+  .bg-label{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:10px 14px;
+    background:rgba(24,50,79,.55);
+    color:#fff;
+    font-size:.76rem;
+    text-align:center;
+  }
+  .veil{
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:#fbfcfe;
+    opacity:.6;
+  }
+
+  #s2-1.play .bg-layer{ animation:breathe 6s ease-in-out infinite; }
+  @keyframes breathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.09); } }
+
+  #s2-2 .bg-layer{ will-change:transform; }
+  #s2-2.nudge .bg-layer{ animation:nudge 1s ease; }
+  @keyframes nudge{ 0%{ transform:translateY(0); } 50%{ transform:translateY(-14px); } 100%{ transform:translateY(0); } }
+
+  #s2-3.play .veil{ animation:veilFade 1.3s ease forwards; }
+  @keyframes veilFade{ to{ opacity:.14; } }
+
+  /* ---------- Группа 3: карточки услуг ---------- */
+  .cards-demo{ display:flex; flex-direction:column; gap:12px; }
+  .svc-card{
+    background:var(--light2);
+    border:1px solid var(--light1);
+    border-radius:10px;
+    padding:14px 16px;
+    text-align:left;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .svc-card h4{ margin:0 0 4px; font-size:1rem; }
+  .svc-card .price{ color:var(--accent); font-weight:600; font-size:.92rem; }
+  .card-more{
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height .35s ease, opacity .3s ease;
+    font-size:.82rem; color:var(--text); margin-top:0;
+  }
+  .card-more.open{ max-height:90px; opacity:1; margin-top:8px; }
+
+  .js #s3-1 .svc-card{ opacity:0; transform:translateY(22px); }
+  #s3-1.play .svc-card{ animation:cardPop .5s ease forwards; }
+  #s3-1.play .svc-card:nth-child(1){ animation-delay:0ms; }
+  #s3-1.play .svc-card:nth-child(2){ animation-delay:160ms; }
+  #s3-1.play .svc-card:nth-child(3){ animation-delay:320ms; }
+  @keyframes cardPop{ to{ opacity:1; transform:translateY(0); } }
+
+  #s3-2 .svc-card{ cursor:pointer; border:1px solid var(--light1); }
+  #s3-2 .svc-card.lift{
+    transform:translateY(-6px);
+    border-color:var(--sand);
+    box-shadow:0 10px 22px rgba(24,50,79,.14);
+  }
+  #s3-3 .svc-card{ cursor:pointer; }
+
+  @media (hover:hover){
+    #s3-2 .svc-card:hover{
+      transform:translateY(-6px);
+      border-color:var(--sand);
+      box-shadow:0 10px 22px rgba(24,50,79,.14);
+    }
+  }
+
+  /* ---------- Группа 4: карусель работ ---------- */
+  .tile-label{ font-size:.82rem; font-weight:600; color:#fff; }
+
+  #s4-1 .strip{
+    display:flex; gap:12px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+    padding:4px 40px 10px 4px;
+  }
+  .tile{
+    flex:0 0 auto; width:72%; max-width:230px; height:130px;
+    border-radius:10px; scroll-snap-align:start;
+    display:flex; align-items:flex-end; padding:10px;
+  }
+  .tile:nth-child(1){ background:linear-gradient(135deg,#356094,#18324f); }
+  .tile:nth-child(2){ background:linear-gradient(135deg,#9dbfdc,#356094); }
+  .tile:nth-child(3){ background:linear-gradient(135deg,#cdb489,#9dbfdc); }
+  .tile:nth-child(4){ background:linear-gradient(135deg,#18324f,#356094); }
+  .tile:nth-child(5){ background:linear-gradient(135deg,#356094,#cdb489); }
+  .tile:nth-child(6){ background:linear-gradient(135deg,#9dbfdc,#18324f); }
+
+  #s4-2 .rotor-view{ position:relative; height:170px; overflow:hidden; border-radius:10px; }
+  #s4-2 .rotor-track{ display:flex; height:100%; transition:transform .6s ease; }
+  #s4-2 .rotor-frame{
+    flex:0 0 100%; height:100%;
+    display:flex; align-items:flex-end; padding:12px;
+  }
+  #s4-2 .rotor-frame:nth-child(1){ background:linear-gradient(135deg,#356094,#18324f); }
+  #s4-2 .rotor-frame:nth-child(2){ background:linear-gradient(135deg,#9dbfdc,#356094); }
+  #s4-2 .rotor-frame:nth-child(3){ background:linear-gradient(135deg,#cdb489,#9dbfdc); }
+  #s4-2 .rotor-frame:nth-child(4){ background:linear-gradient(135deg,#18324f,#356094); }
+  #s4-2 .rotor-frame:nth-child(5){ background:linear-gradient(135deg,#356094,#cdb489); }
+  #s4-2 .rotor-frame:nth-child(6){ background:linear-gradient(135deg,#9dbfdc,#18324f); }
+
+  #s4-3 .mosaic{
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:repeat(3,1fr);
+    gap:8px; height:260px;
+  }
+  .mtile{
+    border-radius:8px; display:flex; align-items:flex-end; padding:8px;
+    cursor:pointer; transition:transform .25s ease;
+  }
+  .mtile:nth-child(1){ background:linear-gradient(135deg,#356094,#18324f); }
+  .mtile:nth-child(2){ background:linear-gradient(135deg,#9dbfdc,#356094); }
+  .mtile:nth-child(3){ background:linear-gradient(135deg,#cdb489,#9dbfdc); }
+  .mtile:nth-child(4){ background:linear-gradient(135deg,#18324f,#356094); }
+  .mtile:nth-child(5){ background:linear-gradient(135deg,#356094,#cdb489); }
+  .mtile:nth-child(6){ background:linear-gradient(135deg,#9dbfdc,#18324f); }
+  .mtile.expanded{
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    width:100%; height:100%; z-index:60; border-radius:0;
+    align-items:center; justify-content:center; transition:none;
+  }
+  .mtile.expanded .tile-label{ font-size:1.2rem; }
+  .lightbox-backdrop{
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background:rgba(14,30,48,.78); z-index:55;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .lightbox-backdrop.show{ opacity:1; pointer-events:auto; }
+
+  /* ---------- Группа 5: цифры-достижения ---------- */
+  .stats-demo{ display:flex; justify-content:space-between; gap:10px; text-align:center; flex-wrap:wrap; }
+  .stat{ flex:1 1 30%; min-width:90px; }
+  .stat-num{ font-family:Georgia,serif; font-size:1.6rem; color:var(--heading); font-weight:700; display:block; }
+  .stat-label{ font-size:.72rem; color:var(--text); margin-top:2px; }
+  .stat-underline{ height:2px; background:var(--sand); width:0; margin:6px auto 0; }
+  #s5-2.play .stat-underline{ animation:growLine .8s ease forwards; }
+  @keyframes growLine{ to{ width:44px; } }
+
+  .js #s5-2 .stat-num,.js #s5-2 .stat-label{ opacity:0; transform:translateY(8px); }
+  #s5-2.play .stat-num,#s5-2.play .stat-label{ animation:statUp .5s ease forwards; }
+  #s5-2.play .stat:nth-child(1) .stat-num{ animation-delay:0ms; }
+  #s5-2.play .stat:nth-child(2) .stat-num{ animation-delay:140ms; }
+  #s5-2.play .stat:nth-child(3) .stat-num{ animation-delay:280ms; }
+  @keyframes statUp{ to{ opacity:1; transform:translateY(0); } }
+
+  .js #s5-3 .stat{ opacity:0; }
+  #s5-3.play .stat{ animation:fadeOnly .6s ease forwards; }
+  #s5-3.play .stat:nth-child(1){ animation-delay:0ms; }
+  #s5-3.play .stat:nth-child(2){ animation-delay:120ms; }
+  #s5-3.play .stat:nth-child(3){ animation-delay:240ms; }
+  @keyframes fadeOnly{ to{ opacity:1; } }
+
+  /* ---------- Группа 6: кнопка «Записаться» ---------- */
+  .cta-wrap{ text-align:center; padding:14px 0; }
+  .cta-btn{
+    position:relative;
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:14px 30px;
+    border-radius:30px;
+    font-size:.95rem;
+    letter-spacing:.03em;
+    cursor:pointer;
+    overflow:hidden;
+  }
+  .cta-btn span{ position:relative; z-index:2; }
+  .fill-layer{
+    position:absolute; top:0; left:0; bottom:0; width:0;
+    background:var(--navy); z-index:1;
+    transition:width .55s ease;
+  }
+  .cta-btn.filled .fill-layer{ width:100%; }
+
+  .ring-wrap{ position:relative; display:inline-block; padding:8px; }
+  .edge{ position:absolute; background:var(--sand); }
+  .edge-top{ top:0; left:0; height:2px; width:0; }
+  .edge-right{ top:0; right:0; width:2px; height:0; }
+  .edge-bottom{ bottom:0; right:0; height:2px; width:0; }
+  .edge-left{ bottom:0; left:0; width:2px; height:0; }
+  .ring-wrap.run .edge-top{ animation:growW .3s linear forwards; }
+  .ring-wrap.run .edge-right{ animation:growH .3s linear forwards .3s; }
+  .ring-wrap.run .edge-bottom{ animation:growW .3s linear forwards .6s; }
+  .ring-wrap.run .edge-left{ animation:growH .3s linear forwards .9s; }
+  @keyframes growW{ to{ width:100%; } }
+  @keyframes growH{ to{ height:100%; } }
+
+  #s6-3.play .cta-btn{ animation:pulse 2.6s ease-in-out infinite; }
+  @keyframes pulse{ 0%{ transform:scale(1); } 6%{ transform:scale(1.045); } 12%{ transform:scale(1); } 100%{ transform:scale(1); } }
+
+  footer{ text-align:center; padding:30px 18px 46px; font-size:.78rem; color:var(--muted); }
+
+  @media (min-width:600px){
+    .page-header h1{ font-size:1.5rem; }
+  }
+
+  /* Уважаем настройку "меньше движения": анимации сворачиваются до мгновенных, контент остаётся видимым */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:0.001ms !important;
+      animation-delay:0s !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.001ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="eyebrow">Ольга Шевелева · визажист</div>
+  <h1>Варианты анимации для сайта Ольги</h1>
+  <p class="lead">18 живых примеров, по три на каждый узел будущего сайта. Пролистайте и посмотрите каждый вживую — можно нажимать и запускать повторно.</p>
+  <div class="hint">Назовите номера тех, что нравятся: например 1.2, 3.1, 4.1</div>
+</header>
+
+<nav class="quicknav" aria-label="Быстрые ссылки по вариантам">
+  <a href="#item-1-1">1.1</a><a href="#item-1-2">1.2</a><a href="#item-1-3">1.3</a>
+  <a href="#item-2-1">2.1</a><a href="#item-2-2">2.2</a><a href="#item-2-3">2.3</a>
+  <a href="#item-3-1">3.1</a><a href="#item-3-2">3.2</a><a href="#item-3-3">3.3</a>
+  <a href="#item-4-1">4.1</a><a href="#item-4-2">4.2</a><a href="#item-4-3">4.3</a>
+  <a href="#item-5-1">5.1</a><a href="#item-5-2">5.2</a><a href="#item-5-3">5.3</a>
+  <a href="#item-6-1">6.1</a><a href="#item-6-2">6.2</a><a href="#item-6-3">6.3</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- ГРУППА 1 -->
+  <section class="group">
+    <h2 class="group-title">Группа 1 — появление заголовка на первом экране</h2>
+    <p class="group-note">Текст заголовка: «Красота, в которой вам спокойно»</p>
+
+    <div class="variant" id="item-1-1">
+      <div class="v-num">1.1</div>
+      <div class="v-stage" id="s1-1" data-anim="chars">
+        <div class="hero-title-demo"><h3><span class="word"><span class="ch" style="--i:0">К</span><span class="ch" style="--i:1">р</span><span class="ch" style="--i:2">а</span><span class="ch" style="--i:3">с</span><span class="ch" style="--i:4">о</span><span class="ch" style="--i:5">т</span><span class="ch" style="--i:6">а</span><span class="ch" style="--i:7">,</span></span> <span class="word"><span class="ch" style="--i:8">в</span></span> <span class="word"><span class="ch" style="--i:9">к</span><span class="ch" style="--i:10">о</span><span class="ch" style="--i:11">т</span><span class="ch" style="--i:12">о</span><span class="ch" style="--i:13">р</span><span class="ch" style="--i:14">о</span><span class="ch" style="--i:15">й</span></span> <span class="word"><span class="ch" style="--i:16">в</span><span class="ch" style="--i:17">а</span><span class="ch" style="--i:18">м</span></span> <span class="word"><span class="ch" style="--i:19">с</span><span class="ch" style="--i:20">п</span><span class="ch" style="--i:21">о</span><span class="ch" style="--i:22">к</span><span class="ch" style="--i:23">о</span><span class="ch" style="--i:24">й</span><span class="ch" style="--i:25">н</span><span class="ch" style="--i:26">о</span></span></h3></div>
+      </div>
+      <p class="v-desc">Буквы проявляются по одной слева направо.</p>
+      <button class="replay" data-stage="s1-1">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-1-2">
+      <div class="v-num">1.2</div>
+      <div class="v-stage" id="s1-2" data-anim="lines">
+        <div class="hero-title-demo">
+          <h3>
+            <span class="line-mask"><span class="line-inner" style="--i:0">Красота, в которой</span></span>
+            <span class="line-mask"><span class="line-inner" style="--i:1">вам спокойно</span></span>
+          </h3>
+        </div>
+      </div>
+      <p class="v-desc">Строки выезжают снизу из-под невидимой линии, по очереди.</p>
+      <button class="replay" data-stage="s1-2">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-1-3">
+      <div class="v-num">1.3</div>
+      <div class="v-stage" id="s1-3" data-anim="words">
+        <div class="hero-title-demo"><h3><span class="word-pop" style="--i:0">Красота,</span> <span class="word-pop" style="--i:1">в</span> <span class="word-pop" style="--i:2">которой</span> <span class="word-pop" style="--i:3">вам</span> <span class="word-pop" style="--i:4">спокойно</span></h3></div>
+      </div>
+      <p class="v-desc">Слово за словом проявляется с лёгким увеличением.</p>
+      <button class="replay" data-stage="s1-3">Показать ещё раз</button>
+    </div>
+  </section>
+
+  <!-- ГРУППА 2 -->
+  <section class="group">
+    <h2 class="group-title">Группа 2 — фон первого экрана</h2>
+    <p class="group-note">Вместо фото — заглушка в цветах макета (в готовом сайте здесь будет фотография работы Ольги).</p>
+
+    <div class="variant" id="item-2-1">
+      <div class="v-num">2.1</div>
+      <div class="v-stage" id="s2-1" data-anim="breathe">
+        <div class="bg-demo">
+          <div class="bg-layer"></div>
+          <div class="bg-label">здесь будет фото работы</div>
+        </div>
+      </div>
+      <p class="v-desc">Фон очень медленно наезжает — эффект дыхания.</p>
+      <button class="replay" data-stage="s2-1">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-2-2">
+      <div class="v-num">2.2</div>
+      <div class="v-stage" id="s2-2" data-anim="parallax">
+        <div class="bg-demo">
+          <div class="bg-layer"></div>
+          <div class="bg-label">здесь будет фото работы</div>
+        </div>
+      </div>
+      <p class="v-desc">Фон чуть сдвигается при прокрутке страницы, текст остаётся на месте. Прокрутите страницу мимо блока, чтобы увидеть, или нажмите кнопку ниже для короткого показа.</p>
+      <button class="replay" data-stage="s2-2">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-2-3">
+      <div class="v-num">2.3</div>
+      <div class="v-stage" id="s2-3" data-anim="veil">
+        <div class="bg-demo">
+          <div class="bg-layer"></div>
+          <div class="veil"></div>
+          <div class="bg-label">здесь будет фото работы</div>
+        </div>
+      </div>
+      <p class="v-desc">Фон статичный, поверх плавно светлеет лёгкая дымка.</p>
+      <button class="replay" data-stage="s2-3">Показать ещё раз</button>
+    </div>
+  </section>
+
+  <!-- ГРУППА 3 -->
+  <section class="group">
+    <h2 class="group-title">Группа 3 — карточки услуг</h2>
+    <p class="group-note">Три услуги из прайса Ольги.</p>
+
+    <div class="variant" id="item-3-1">
+      <div class="v-num">3.1</div>
+      <div class="v-stage" id="s3-1" data-anim="cardpop">
+        <div class="cards-demo">
+          <div class="svc-card"><h4>Свадебный образ</h4><div class="price">15 000 ₽</div></div>
+          <div class="svc-card"><h4>Полный образ</h4><div class="price">8 000 ₽</div></div>
+          <div class="svc-card"><h4>Обучение «Сам себе визажист»</h4><div class="price">15 000 ₽</div></div>
+        </div>
+      </div>
+      <p class="v-desc">Карточки всплывают снизу по очереди, когда доходишь до них на экране.</p>
+      <button class="replay" data-stage="s3-1">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-3-2">
+      <div class="v-num">3.2</div>
+      <div class="v-stage" id="s3-2" data-anim="lift">
+        <div class="cards-demo">
+          <div class="svc-card"><h4>Свадебный образ</h4><div class="price">15 000 ₽</div></div>
+        </div>
+      </div>
+      <p class="v-desc">При касании карточка приподнимается и подсвечивается тонкой рамкой песочного цвета. Нажмите на карточку.</p>
+      <button class="replay" data-stage="s3-2">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-3-3">
+      <div class="v-num">3.3</div>
+      <div class="v-stage" id="s3-3" data-anim="morepanel">
+        <div class="cards-demo">
+          <div class="svc-card">
+            <h4>Полный образ</h4>
+            <div class="price">8 000 ₽</div>
+            <div class="card-more">Что входит: подготовка кожи, дневной или вечерний макияж, лёгкая укладка.</div>
+          </div>
+        </div>
+      </div>
+      <p class="v-desc">При касании внутри карточки мягко проявляется подпись «что входит». Нажмите на карточку.</p>
+      <button class="replay" data-stage="s3-3">Показать ещё раз</button>
+    </div>
+  </section>
+
+  <!-- ГРУППА 4 -->
+  <section class="group">
+    <h2 class="group-title">Группа 4 — карусель работ</h2>
+    <p class="group-note">Шесть плиток-заглушек вместо фотографий работ Ольги.</p>
+
+    <div class="variant" id="item-4-1">
+      <div class="v-num">4.1</div>
+      <div class="v-stage" id="s4-1" data-anim="filmstrip">
+        <div class="strip">
+          <div class="tile"><span class="tile-label">Работа 1</span></div>
+          <div class="tile"><span class="tile-label">Работа 2</span></div>
+          <div class="tile"><span class="tile-label">Работа 3</span></div>
+          <div class="tile"><span class="tile-label">Работа 4</span></div>
+          <div class="tile"><span class="tile-label">Работа 5</span></div>
+          <div class="tile"><span class="tile-label">Работа 6</span></div>
+        </div>
+      </div>
+      <p class="v-desc">Лента листается пальцем, соседние кадры видны краями.</p>
+      <button class="replay" data-stage="s4-1">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-4-2">
+      <div class="v-num">4.2</div>
+      <div class="v-stage" id="s4-2" data-anim="autorotate">
+        <div class="rotor-view">
+          <div class="rotor-track">
+            <div class="rotor-frame"><span class="tile-label">Работа 1</span></div>
+            <div class="rotor-frame"><span class="tile-label">Работа 2</span></div>
+            <div class="rotor-frame"><span class="tile-label">Работа 3</span></div>
+            <div class="rotor-frame"><span class="tile-label">Работа 4</span></div>
+            <div class="rotor-frame"><span class="tile-label">Работа 5</span></div>
+            <div class="rotor-frame"><span class="tile-label">Работа 6</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="v-desc">Кадры идут сами по кругу, при касании останавливаются. Нажмите на ленту, чтобы остановить.</p>
+      <button class="replay" data-stage="s4-2">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-4-3">
+      <div class="v-num">4.3</div>
+      <div class="v-stage" id="s4-3" data-anim="mosaic">
+        <div class="mosaic">
+          <div class="mtile"><span class="tile-label">Работа 1</span></div>
+          <div class="mtile"><span class="tile-label">Работа 2</span></div>
+          <div class="mtile"><span class="tile-label">Работа 3</span></div>
+          <div class="mtile"><span class="tile-label">Работа 4</span></div>
+          <div class="mtile"><span class="tile-label">Работа 5</span></div>
+          <div class="mtile"><span class="tile-label">Работа 6</span></div>
+        </div>
+      </div>
+      <p class="v-desc">Сетка-мозаика: по касанию кадр разворачивается на весь экран, повторное касание возвращает назад.</p>
+      <button class="replay" data-stage="s4-3">Показать ещё раз</button>
+    </div>
+  </section>
+
+  <!-- ГРУППА 5 -->
+  <section class="group">
+    <h2 class="group-title">Группа 5 — цифры-достижения</h2>
+    <p class="group-note">Показатели работы Ольги.</p>
+
+    <div class="variant" id="item-5-1">
+      <div class="v-num">5.1</div>
+      <div class="v-stage" id="s5-1" data-anim="countup">
+        <div class="stats-demo">
+          <div class="stat"><span class="stat-num" data-value="600" data-suffix="+">600+</span><div class="stat-label">счастливых образов</div></div>
+          <div class="stat"><span class="stat-num" data-value="10" data-suffix="">10</span><div class="stat-label">лет опыта</div></div>
+          <div class="stat"><span class="stat-num" data-value="4.9" data-suffix="">4.9</span><div class="stat-label">отзывы</div></div>
+        </div>
+      </div>
+      <p class="v-desc">Цифры быстро прокручиваются до нужного значения.</p>
+      <button class="replay" data-stage="s5-1">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-5-2">
+      <div class="v-num">5.2</div>
+      <div class="v-stage" id="s5-2" data-anim="underline">
+        <div class="stats-demo">
+          <div class="stat"><span class="stat-num">600+</span><div class="stat-label">счастливых образов</div><div class="stat-underline"></div></div>
+          <div class="stat"><span class="stat-num">10</span><div class="stat-label">лет опыта</div><div class="stat-underline"></div></div>
+          <div class="stat"><span class="stat-num">4.9</span><div class="stat-label">отзывы</div><div class="stat-underline"></div></div>
+        </div>
+      </div>
+      <p class="v-desc">Цифры проявляются, а под ними слева направо растёт тонкая линия.</p>
+      <button class="replay" data-stage="s5-2">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-5-3">
+      <div class="v-num">5.3</div>
+      <div class="v-stage" id="s5-3" data-anim="fade">
+        <div class="stats-demo">
+          <div class="stat"><span class="stat-num">600+</span><div class="stat-label">счастливых образов</div></div>
+          <div class="stat"><span class="stat-num">10</span><div class="stat-label">лет опыта</div></div>
+          <div class="stat"><span class="stat-num">4.9</span><div class="stat-label">отзывы</div></div>
+        </div>
+      </div>
+      <p class="v-desc">Цифры просто проявляются, без движения.</p>
+      <button class="replay" data-stage="s5-3">Показать ещё раз</button>
+    </div>
+  </section>
+
+  <!-- ГРУППА 6 -->
+  <section class="group">
+    <h2 class="group-title">Группа 6 — кнопка «Записаться»</h2>
+    <p class="group-note">Главная кнопка сайта.</p>
+
+    <div class="variant" id="item-6-1">
+      <div class="v-num">6.1</div>
+      <div class="v-stage" id="s6-1" data-anim="fillsweep">
+        <div class="cta-wrap">
+          <button type="button" class="cta-btn"><span class="fill-layer"></span><span>Записаться</span></button>
+        </div>
+      </div>
+      <p class="v-desc">При касании заливка наплывает слева направо. Нажмите на кнопку.</p>
+      <button class="replay" data-stage="s6-1">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-6-2">
+      <div class="v-num">6.2</div>
+      <div class="v-stage" id="s6-2" data-anim="ring">
+        <div class="cta-wrap">
+          <span class="ring-wrap">
+            <span class="edge edge-top"></span><span class="edge edge-right"></span>
+            <span class="edge edge-bottom"></span><span class="edge edge-left"></span>
+            <button type="button" class="cta-btn"><span>Записаться</span></button>
+          </span>
+        </div>
+      </div>
+      <p class="v-desc">Вокруг кнопки один раз пробегает тонкая линия-обводка. Нажмите на кнопку.</p>
+      <button class="replay" data-stage="s6-2">Показать ещё раз</button>
+    </div>
+
+    <div class="variant" id="item-6-3">
+      <div class="v-num">6.3</div>
+      <div class="v-stage" id="s6-3" data-anim="pulse">
+        <div class="cta-wrap">
+          <button type="button" class="cta-btn"><span>Записаться</span></button>
+        </div>
+      </div>
+      <p class="v-desc">Кнопка чуть пульсирует раз в несколько секунд, привлекая внимание.</p>
+      <button class="replay" data-stage="s6-3">Показать ещё раз</button>
+    </div>
+  </section>
+
+</div>
+
+<footer>Ольга Шевелева — витрина вариантов анимации · автономная HTML-страница без внешних подключений</footer>
+
+<script>
+(function(){
+  "use strict";
+  document.documentElement.classList.add('js');
+
+  var reduced = false;
+  try{ reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
+  function restart(el, cls){
+    if(!el) return;
+    el.classList.remove(cls);
+    void el.offsetWidth; /* принудительный reflow, чтобы анимацию можно было перезапустить */
+    el.classList.add(cls);
+  }
+
+  function countUp(stage){
+    var nums = stage.querySelectorAll('.stat-num');
+    for(var n=0;n<nums.length;n++){
+      (function(el){
+        var raw = el.getAttribute('data-value');
+        var suffix = el.getAttribute('data-suffix') || '';
+        if(!raw){ return; } /* для варианта 5.1 значения заданы в data-value */
+        var target = parseFloat(raw);
+        var decimals = raw.indexOf('.') > -1 ? 1 : 0;
+        if(reduced){ el.textContent = raw + suffix; return; }
+        if(el._raf){ cancelAnimationFrame(el._raf); }
+        var start = null; var dur = 900;
+        function step(ts){
+          if(start === null){ start = ts; }
+          var p = Math.min(1, (ts - start) / dur);
+          var eased = 1 - Math.pow(1 - p, 3);
+          var val = target * eased;
+          el.textContent = (decimals ? val.toFixed(1) : Math.round(val)) + suffix;
+          if(p < 1){ el._raf = requestAnimationFrame(step); }
+          else { el.textContent = raw + suffix; }
+        }
+        el.textContent = (decimals ? '0.0' : '0') + suffix;
+        el._raf = requestAnimationFrame(step);
+      })(nums[n]);
+    }
+  }
+
+  function startAutoRotate(stage){
+    var track = stage.querySelector('.rotor-track');
+    if(!track) return;
+    var frames = track.children.length;
+    if(stage._interval){ clearInterval(stage._interval); }
+    var idx = 0;
+    track.style.transition = 'none';
+    track.style.transform = 'translateX(0%)';
+    void track.offsetWidth;
+    track.style.transition = '';
+    if(reduced){ return; } /* при "меньше движения" оставляем первый кадр статично */
+    stage._interval = setInterval(function(){
+      idx = (idx + 1) % frames;
+      track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+    }, 1800);
+  }
+
+  function openTile(tile){
+    tile.classList.add('expanded');
+    var bd = document.querySelector('.lightbox-backdrop');
+    if(bd){ bd.classList.add('show'); }
+  }
+  function closeTile(tile){
+    tile.classList.remove('expanded');
+    var bd = document.querySelector('.lightbox-backdrop');
+    if(bd){ bd.classList.remove('show'); }
+  }
+
+  function trigger(stage){
+    if(!stage) return;
+    var anim = stage.getAttribute('data-anim');
+    switch(anim){
+      case 'chars':
+      case 'lines':
+      case 'words':
+      case 'breathe':
+      case 'veil':
+      case 'cardpop':
+      case 'underline':
+      case 'fade':
+      case 'pulse':
+        restart(stage, 'play');
+        break;
+      case 'parallax':
+        restart(stage, 'nudge');
+        break;
+      case 'lift': {
+        var card = stage.querySelector('.svc-card');
+        restart(card, 'lift');
+        if(card._t){ clearTimeout(card._t); }
+        card._t = setTimeout(function(){ card.classList.remove('lift'); }, 1300);
+        break;
+      }
+      case 'morepanel': {
+        var panel = stage.querySelector('.card-more');
+        restart(panel, 'open');
+        if(panel._t){ clearTimeout(panel._t); }
+        panel._t = setTimeout(function(){ panel.classList.remove('open'); }, 1700);
+        break;
+      }
+      case 'filmstrip': {
+        var strip = stage.querySelector('.strip');
+        if(strip){
+          strip.scrollTo({ left:0, behavior:'smooth' });
+          setTimeout(function(){ strip.scrollTo({ left:60, behavior:'smooth' }); }, 250);
+          setTimeout(function(){ strip.scrollTo({ left:0, behavior:'smooth' }); }, 750);
+        }
+        break;
+      }
+      case 'autorotate':
+        startAutoRotate(stage);
+        break;
+      case 'mosaic': {
+        var first = stage.querySelector('.mtile');
+        if(first){
+          openTile(first);
+          setTimeout(function(){ closeTile(first); }, 900);
+        }
+        break;
+      }
+      case 'countup':
+        countUp(stage);
+        break;
+      case 'fillsweep': {
+        var btn = stage.querySelector('.cta-btn');
+        restart(btn, 'filled');
+        if(btn._t){ clearTimeout(btn._t); }
+        btn._t = setTimeout(function(){ btn.classList.remove('filled'); }, 900);
+        break;
+      }
+      case 'ring': {
+        var wrap = stage.querySelector('.ring-wrap');
+        restart(wrap, 'run');
+        if(wrap._t){ clearTimeout(wrap._t); }
+        wrap._t = setTimeout(function(){ wrap.classList.remove('run'); }, 1700);
+        break;
+      }
+    }
+  }
+
+  function initParallax(){
+    var stage = document.getElementById('s2-2');
+    if(!stage || reduced) return;
+    var layer = stage.querySelector('.bg-layer');
+    if(!layer) return;
+    var ticking = false;
+    function update(){
+      var r = stage.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var center = r.top + r.height / 2 - vh / 2;
+      var offset = Math.max(-24, Math.min(24, -center * 0.06));
+      layer.style.transform = 'translateY(' + offset.toFixed(1) + 'px)';
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(update); ticking = true; }
+    }, { passive:true });
+    update();
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+
+    /* Карточка 3.2 — касание/клик приподнимает */
+    var s32 = document.getElementById('s3-2');
+    if(s32){
+      var card32 = s32.querySelector('.svc-card');
+      if(card32){ card32.addEventListener('click', function(){ trigger(s32); }); }
+    }
+
+    /* Карточка 3.3 — касание/клик открывает подпись */
+    var s33 = document.getElementById('s3-3');
+    if(s33){
+      var card33 = s33.querySelector('.svc-card');
+      if(card33){ card33.addEventListener('click', function(){ trigger(s33); }); }
+    }
+
+    /* Карусель 4.2 — касание/клик по ленте останавливает автопрокрутку */
+    var s42 = document.getElementById('s4-2');
+    if(s42){
+      var track42 = s42.querySelector('.rotor-track');
+      if(track42){
+        track42.addEventListener('click', function(){ clearInterval(s42._interval); });
+      }
+    }
+
+    /* Мозаика 4.3 — касание/клик по плитке разворачивает и сворачивает */
+    var s43 = document.getElementById('s4-3');
+    if(s43){
+      var mtiles = s43.querySelectorAll('.mtile');
+      for(var m=0;m<mtiles.length;m++){
+        mtiles[m].addEventListener('click', function(){
+          if(this.classList.contains('expanded')){ closeTile(this); }
+          else { openTile(this); }
+        });
+      }
+      var backdrop = document.querySelector('.lightbox-backdrop');
+      if(backdrop){
+        backdrop.addEventListener('click', function(){
+          var open = s43.querySelector('.mtile.expanded');
+          if(open){ closeTile(open); }
+        });
+      }
+    }
+
+    /* Кнопки группы 6 — касание/клик запускает эффект */
+    ['s6-1','s6-2','s6-3'].forEach(function(id){
+      var stage = document.getElementById(id);
+      if(!stage) return;
+      var btn = stage.querySelector('.cta-btn');
+      if(btn){ btn.addEventListener('click', function(){ trigger(stage); }); }
+    });
+
+    /* Кнопки "Показать ещё раз" */
+    var replayButtons = document.querySelectorAll('.replay');
+    for(var b=0;b<replayButtons.length;b++){
+      replayButtons[b].addEventListener('click', function(){
+        var id = this.getAttribute('data-stage');
+        trigger(document.getElementById(id));
+      });
+    }
+
+    /* Автозапуск при появлении блока на экране */
+    var stages = document.querySelectorAll('.v-stage');
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            trigger(entry.target);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold:0.3, rootMargin:'0px 0px -8% 0px' });
+      for(var s=0;s<stages.length;s++){ io.observe(stages[s]); }
+    } else {
+      /* нет поддержки IntersectionObserver — запускаем все эффекты сразу */
+      for(var s2=0;s2<stages.length;s2++){ trigger(stages[s2]); }
+    }
+
+    initParallax();
+  });
+})();
+</script>
+</body>
+</html>
