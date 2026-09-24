@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta name="robots" content="noindex, nofollow, noarchive">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Витрина анимаций — сайт Ольги Шевелевой</title>
@@ -310,6 +309,17 @@
   @keyframes fadeOnly{ to{ opacity:1; } }
 
   /* ---------- Группа 6: кнопка «Записаться» ---------- */
+  .magnet-zone{ display:inline-block; padding:22px 34px; }
+  .magnet-btn{ transition:transform .28s cubic-bezier(.2,.7,.3,1); will-change:transform; }
+  .magnet-btn.demo{ animation:magnetDemo 1.8s ease; }
+  @keyframes magnetDemo{
+    0%{ transform:translate(0,0); }
+    22%{ transform:translate(16px,-7px); }
+    50%{ transform:translate(-14px,6px); }
+    75%{ transform:translate(8px,3px); }
+    100%{ transform:translate(0,0); }
+  }
+
   .cta-wrap{ text-align:center; padding:14px 0; }
   .cta-btn{
     position:relative;
@@ -381,7 +391,7 @@
   <a href="#item-3-1">3.1</a><a href="#item-3-2">3.2</a><a href="#item-3-3">3.3</a>
   <a href="#item-4-1">4.1</a><a href="#item-4-2">4.2</a><a href="#item-4-3">4.3</a>
   <a href="#item-5-1">5.1</a><a href="#item-5-2">5.2</a><a href="#item-5-3">5.3</a>
-  <a href="#item-6-1">6.1</a><a href="#item-6-2">6.2</a><a href="#item-6-3">6.3</a>
+  <a href="#item-6-1">6.1</a><a href="#item-6-2">6.2</a><a href="#item-6-3">6.3</a><a href="#item-6-4">6.4</a>
 </nav>
 
 <div class="wrap">
@@ -654,6 +664,19 @@
       <p class="v-desc">Кнопка чуть пульсирует раз в несколько секунд, привлекая внимание.</p>
       <button class="replay" data-stage="s6-3">Показать ещё раз</button>
     </div>
+
+    <div class="variant" id="item-6-4">
+      <div class="v-num">6.4</div>
+      <div class="v-stage" id="s6-4" data-anim="magnet">
+        <div class="cta-wrap">
+          <span class="magnet-zone">
+            <button type="button" class="cta-btn magnet-btn"><span>Записаться</span></button>
+          </span>
+        </div>
+      </div>
+      <p class="v-desc">Кнопка тянется за пальцем: ведите пальцем рядом с ней — она подаётся навстречу, убираете палец — возвращается на место. Такая кнопка стоит на сайте нашего агентства.</p>
+      <button class="replay" data-stage="s6-4">Показать ещё раз</button>
+    </div>
   </section>
 
 </div>
@@ -799,6 +822,16 @@
         wrap._t = setTimeout(function(){ wrap.classList.remove('run'); }, 1700);
         break;
       }
+      case 'magnet': {
+        var mb = stage.querySelector('.magnet-btn');
+        if(mb){
+          mb.style.transform = '';
+          restart(mb, 'demo');
+          if(mb._t){ clearTimeout(mb._t); }
+          mb._t = setTimeout(function(){ mb.classList.remove('demo'); }, 1900);
+        }
+        break;
+      }
     }
   }
 
@@ -863,6 +896,36 @@
           var open = s43.querySelector('.mtile.expanded');
           if(open){ closeTile(open); }
         });
+      }
+    }
+
+    /* Кнопка 6.4 — тянется за пальцем или курсором */
+    var s64 = document.getElementById('s6-4');
+    if(s64 && !reduced){
+      var zone64 = s64.querySelector('.magnet-zone');
+      var btn64 = s64.querySelector('.magnet-btn');
+      if(zone64 && btn64){
+        var pull = function(x, y){
+          btn64.classList.remove('demo');
+          var r = btn64.getBoundingClientRect();
+          var dx = (x - (r.left + r.width / 2)) * 0.45;
+          var dy = (y - (r.top + r.height / 2)) * 0.45;
+          var lim = 20;
+          dx = Math.max(-lim, Math.min(lim, dx));
+          dy = Math.max(-lim, Math.min(lim, dy));
+          btn64.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+        };
+        var release = function(){ btn64.style.transform = ''; };
+        zone64.addEventListener('mousemove', function(e){ pull(e.clientX, e.clientY); });
+        zone64.addEventListener('mouseleave', release);
+        zone64.addEventListener('touchstart', function(e){
+          var tp = e.touches[0]; if(tp){ pull(tp.clientX, tp.clientY); }
+        }, { passive:true });
+        zone64.addEventListener('touchmove', function(e){
+          var tp = e.touches[0]; if(tp){ pull(tp.clientX, tp.clientY); }
+        }, { passive:true });
+        zone64.addEventListener('touchend', release);
+        zone64.addEventListener('touchcancel', release);
       }
     }
 
