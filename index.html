@@ -153,10 +153,11 @@
   @keyframes wordPop{ to{ opacity:1; transform:scale(1); } }
 
   /* ---------- Группа 2: фон первого экрана ---------- */
-  .bg-demo{ position:relative; height:190px; border-radius:10px; overflow:hidden; }
+  .bg-demo{ position:relative; height:280px; border-radius:10px; overflow:hidden; background:#18324f; }
+  .bg-title{ position:absolute; left:0; right:0; top:9%; z-index:3; text-align:center; color:#fff; font-family:Georgia,serif; font-size:1.7rem; text-shadow:0 2px 12px rgba(0,0,0,.5); pointer-events:none; }
   .bg-layer{
     position:absolute; top:-12%; left:-12%; right:-12%; bottom:-12%;
-    background:linear-gradient(135deg,var(--light3),var(--accent));
+    background:#18324f url(bg.jpg) 50% 22%/cover no-repeat;
   }
   .bg-label{
     position:absolute; left:0; right:0; bottom:0;
@@ -169,18 +170,18 @@
   .veil{
     position:absolute; top:0; left:0; right:0; bottom:0;
     background:#fbfcfe;
-    opacity:.6;
+    opacity:.85;
   }
 
-  #s2-1.play .bg-layer{ animation:breathe 6s ease-in-out infinite; }
-  @keyframes breathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.09); } }
+  #s2-1.play .bg-layer{ animation:breathe 5s ease-in-out infinite; }
+  @keyframes breathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.16); } }
 
   #s2-2 .bg-layer{ will-change:transform; }
-  #s2-2.nudge .bg-layer{ animation:nudge 1s ease; }
-  @keyframes nudge{ 0%{ transform:translateY(0); } 50%{ transform:translateY(-14px); } 100%{ transform:translateY(0); } }
+  #s2-2.nudge .bg-layer{ animation:nudge 1.4s ease; }
+  @keyframes nudge{ 0%{ transform:translateY(0); } 50%{ transform:translateY(-34px); } 100%{ transform:translateY(0); } }
 
-  #s2-3.play .veil{ animation:veilFade 1.3s ease forwards; }
-  @keyframes veilFade{ to{ opacity:.14; } }
+  #s2-3.play .veil{ animation:veilFade 2.2s ease forwards; }
+  @keyframes veilFade{ to{ opacity:0; } }
 
   /* ---------- Группа 3: карточки услуг ---------- */
   .cards-demo{ display:flex; flex-direction:column; gap:12px; }
@@ -437,14 +438,14 @@
   <!-- ГРУППА 2 -->
   <section class="group">
     <h2 class="group-title">Группа 2 — фон первого экрана</h2>
-    <p class="group-note">Вместо фото — заглушка в цветах макета (в готовом сайте здесь будет фотография работы Ольги).</p>
+    <p class="group-note">На фоне — фото с вашего сайта, поверх — заголовок, как на первом экране.</p>
 
     <div class="variant" id="item-2-1">
       <div class="v-num">2.1</div>
       <div class="v-stage" id="s2-1" data-anim="breathe">
         <div class="bg-demo">
           <div class="bg-layer"></div>
-          <div class="bg-label">здесь будет фото работы</div>
+          <div class="bg-title">Olga Shell</div>
         </div>
       </div>
       <p class="v-desc">Фон очень медленно наезжает — эффект дыхания.</p>
@@ -456,7 +457,7 @@
       <div class="v-stage" id="s2-2" data-anim="parallax">
         <div class="bg-demo">
           <div class="bg-layer"></div>
-          <div class="bg-label">здесь будет фото работы</div>
+          <div class="bg-title">Olga Shell</div>
         </div>
       </div>
       <p class="v-desc">Фон чуть сдвигается при прокрутке страницы, текст остаётся на месте. Прокрутите страницу мимо блока, чтобы увидеть, или нажмите кнопку ниже для короткого показа.</p>
@@ -469,7 +470,7 @@
         <div class="bg-demo">
           <div class="bg-layer"></div>
           <div class="veil"></div>
-          <div class="bg-label">здесь будет фото работы</div>
+          <div class="bg-title">Olga Shell</div>
         </div>
       </div>
       <p class="v-desc">Фон статичный, поверх плавно светлеет лёгкая дымка.</p>
@@ -845,7 +846,7 @@
       var r = stage.getBoundingClientRect();
       var vh = window.innerHeight || document.documentElement.clientHeight;
       var center = r.top + r.height / 2 - vh / 2;
-      var offset = Math.max(-24, Math.min(24, -center * 0.06));
+      var offset = Math.max(-40, Math.min(40, -center * 0.12));
       layer.style.transform = 'translateY(' + offset.toFixed(1) + 'px)';
       ticking = false;
     }
